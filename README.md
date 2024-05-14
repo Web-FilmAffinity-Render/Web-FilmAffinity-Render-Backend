@@ -47,4 +47,4 @@ For any further doubts about the PostgresSQL database see [Render's official doc
 
 ## Deployment
 
-We will be deploying the server on render.
+We will be deploying the server on Render.
