@@ -1,2 +1,7 @@
+# Virtual env
 venv
+
+# Python cache
 __pycache__
+project/*__pycache__*/
+movies/*__pycache__*/
