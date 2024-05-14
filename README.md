@@ -2,9 +2,61 @@
 
 Backend server for our web project. As a Django-based server, it is divided into applications, a settings directory and the manage.py. The rest of the files are complementary.
 
+## Structure
+
+```
+|-- Web-FilmAffinity-Render-Backend
+|   |-- .gihub
+|   |   |-- workflows
+|   |   |   |-- django.yml
+|   |-- project
+|   |   |-- movies
+|   |   |   |-- management
+|   |   |   |   |-- __init__.py
+|   |   |   |   |-- commands
+|   |   |   |   |   |-- __init__.py
+|   |   |   |   |   |-- load_default_movies.py
+|   |   |   |-- migrations
+|   |   |   |   |-- ...
+|   |   |   |-- __init__.py
+|   |   |   |-- admin.py
+|   |   |   |-- appps.py
+|   |   |   |-- models.py
+|   |   |   |-- tests.py
+|   |   |   |-- views.py
+|   |   |-- reviews
+|   |   |   |-- migrations
+|   |   |   |   |-- ...
+|   |   |   |-- __init__.py
+|   |   |   |-- admin.py
+|   |   |   |-- appps.py
+|   |   |   |-- models.py
+|   |   |   |-- tests.py
+|   |   |   |-- views.py
+|   |   |-- users
+|   |   |   |-- migrations
+|   |   |   |   |-- ...
+|   |   |   |-- __init__.py
+|   |   |   |-- admin.py
+|   |   |   |-- appps.py
+|   |   |   |-- models.py
+|   |   |   |-- tests.py
+|   |   |   |-- views.py
+|   |   |-- __init__.py
+|   |   |-- asgi.py
+|   |   |-- settings.py
+|   |   |-- urls.py
+|   |   |-- wsgi.py
+|   |-- .gitignore
+|   |-- build.sh
+|   |-- manage.py
+|   |-- README.md
+|   |-- requirements.txt
+```
+
 ## Project
 
-`/project` is the main folder for the project. Here we speciffy the settings, urls and interfaces for our server, managing its overall structure and behaviour.
+`/project` is the main folder for the project. Here we speciffy the settings, urls and interfaces for our server, managing its overall structure and behaviour. Inside it we can also find our applications. These could have been placed outside, since its only a matter of how is it deffined in the settings, but we found this more compact approach more suitable.
 
 ### Databases
 
@@ -38,6 +90,8 @@ For any further doubts about the PostgresSQL database see [Render's official doc
 #### WhiteNoise
 
 ## Apps
+
+As metioned above, all the apps are located inside the `/project` folder. Following this schema, the apps are named, all with the same structure, as `project.<name of the app>`.
 
 ### movies
 
