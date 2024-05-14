@@ -29,7 +29,11 @@ DATABASES = {
 
 3. Change the `default` URL as needed. Notice here we are following the pattern ``postgres://USER:PASSWORD@INTERNAL_HOST:PORT/DATABASE``. This does not hide the user nor the password or any other sensitive information as it is not a critical requirement for our project. If it were the case, another approach would be needed.
 
+<<<<<<< HEAD
 For any further doubts about the PostgresSQL database see [Render's official documentation](https://docs.render.com/databases)
+=======
+For any further doubts abou the PostgresSQL database see [Render's official documentation](https://docs.render.com/databases)
+>>>>>>> 7505bf8ce16a06d5ff6acce8e7362528f03f2e13
 
 ### Credentials
 
