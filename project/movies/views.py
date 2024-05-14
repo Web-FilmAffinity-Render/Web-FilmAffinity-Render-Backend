@@ -1,7 +1,25 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from project.movies import serializers, models
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
+class CreateMovieView(generics.CreateAPIView):
+    serializer_class = serializers.MovieSerializer
+    def post(self, request):
+        if request.user.is_superuser:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                movie, created = models.Movie.objects.get_or_create(title=serializer.validated_data['title'],
+                                                                    cast=serializer.validated_data['cast'],
+                                                                    country=serializer.validated_data['country'], 
+                                                                    director=serializer.validated_data['director'], 
+                                                                    genre=serializer.validated_data['genre'], 
+                                                                    plot=serializer.validated_data['plot'], 
+                                                                    rate=serializer.validated_data['rate'],
+                                                                    duration=serializer.validated_data['duration'],
+                                                                    year=serializer.validated_data['year'])
+                response = Response(status=status.HTTP_201_CREATED)
+            return response
 
 class MovieListView(generics.ListCreateAPIView):
     serializer_class = serializers.MovieListSerializer
@@ -41,6 +59,16 @@ class MovieListView(generics.ListCreateAPIView):
             queryset = queryset.filter(genre__icontains=genre)
 
         return queryset
+    
+    def put(self):
+        if self.request.user.is_superuser:
+            response = Response(status=status.HTTP_201_CREATED)
+            return response
+        
+    def delete(self):
+        if self.request.user.is_superuser:
+            response = Response(status=status.HTTP_201_CREATED)
+            return response
 
 class MovieView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.MovieSerializer
