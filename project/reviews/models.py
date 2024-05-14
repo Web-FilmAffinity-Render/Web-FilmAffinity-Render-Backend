@@ -1,6 +1,6 @@
 from django.db import models
 
-class review(models.Model):
+class Review(models.Model):
 
     movie_title = models.CharField(max_length=100)
     user_username = models.EmailField()
