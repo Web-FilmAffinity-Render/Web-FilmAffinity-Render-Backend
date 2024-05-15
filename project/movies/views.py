@@ -2,29 +2,8 @@ from rest_framework import generics, status
 from project.movies import serializers, models
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 
-class CreateMovieView(generics.CreateAPIView):
-    serializer_class = serializers.MovieSerializer
-    def post(self, request):
-        if request.user.is_superuser:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                print(serializer.validated_data['title'])
-                movie, created = models.Movie.objects.get_or_create(title=serializer.validated_data['title'],
-                                                                    cast=serializer.validated_data['cast'],
-                                                                    country=serializer.validated_data['country'], 
-                                                                    director=serializer.validated_data['director'], 
-                                                                    genre=serializer.validated_data['genre'], 
-                                                                    plot=serializer.validated_data['plot'], 
-                                                                    rate=serializer.validated_data['rate'],
-                                                                    duration=serializer.validated_data['duration'],
-                                                                    year=serializer.validated_data['year'])
-                response = Response(status=status.HTTP_201_CREATED)
-            else:
-                response = Response(status=status.HTTP_400_BAD_REQUEST)
-        else:
-            response = Response(status=status.HTTP_401_UNAUTHORIZED)
-        return response
 
 class MovieListView(generics.ListAPIView):
     serializer_class = serializers.MovieListSerializer
@@ -43,7 +22,7 @@ class MovieListView(generics.ListAPIView):
         request_params = set(self.request.query_params.keys())
         invalid_params = request_params - allowed_params
         if invalid_params:
-            raise ValidationError(f'Parámetros no válidos:{invalid_params}')
+            raise ValidationError(f'Invalid parameters:{invalid_params}')
         try:
             if min_rate is not None:
                 min_rate = float(min_rate)
@@ -51,7 +30,7 @@ class MovieListView(generics.ListAPIView):
                 max_rate = float(max_rate)
 
         except (ValueError, TypeError) as e:
-            raise ValidationError("Los parámetros de consulta deben ser del tipo correcto.")
+            raise ValidationError("Query parameters must be of the correct type.")
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -65,12 +44,41 @@ class MovieListView(generics.ListAPIView):
 
         return queryset
 
-class MovieView(generics.RetrieveUpdateDestroyAPIView):
+class MovieView(generics.RetrieveAPIView):
     serializer_class = serializers.MovieSerializer
     queryset = models.Movie.objects.all()
 
+class CreateMovieView(generics.CreateAPIView):
+    serializer_class = serializers.MovieSerializer
+    def post(self, request):
+        user = Token.objects.get(key=self.request.COOKIES.get('session')).user
+        if user.is_superuser:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                print(serializer.validated_data['title'])
+                movie, created = models.Movie.objects.get_or_create(
+                    title=serializer.validated_data['title'],
+                    cast=serializer.validated_data['cast'],
+                    country=serializer.validated_data['country'], 
+                    director=serializer.validated_data['director'], 
+                    genre=serializer.validated_data['genre'], 
+                    plot=serializer.validated_data['plot'], 
+                    rate=serializer.validated_data['rate'],
+                    duration=serializer.validated_data['duration'],
+                    year=serializer.validated_data['year'])
+                response = Response(status=status.HTTP_201_CREATED)
+            else:
+                response = Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            response = Response(status=status.HTTP_401_UNAUTHORIZED)
+        return response
+
+class UpdateMovieView(generics.UpdateAPIView):
+    serializer_class = serializers.MovieSerializer
+
     def put(self, request, pk):
-        if request.user.is_superuser:
+        user = Token.objects.get(key=self.request.COOKIES.get('session')).user
+        if user.is_superuser:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
                 title = serializer.validated_data['title']
@@ -101,8 +109,12 @@ class MovieView(generics.RetrieveUpdateDestroyAPIView):
             response = Response(status=status.HTTP_401_UNAUTHORIZED)
         return response
         
+class DestroyMovieView(generics.DestroyAPIView):
+    serializer_class = serializers.MovieSerializer
+
     def delete(self, request , pk):
-        if request.user.is_superuser:
+        user = Token.objects.get(key=self.request.COOKIES.get('session')).user
+        if user.is_superuser:
             movie = models.Movie.objects.filter(pk=pk).delete()
             response = Response(status=status.HTTP_204_NO_CONTENT)
             return response
