@@ -100,11 +100,12 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 
 | Method | Route              | Description                                   | Response                                               |
 |:--------|:----------------:|:---------------------------------------------:|--------------------------------------------------------:|
-| GET    | /movies/          | Obtains entire list of movies                 | 200 + List of JSONs if OK                               |
-| GET    | /movies/<int:pk>  | Obtains movie with id `pk`                    | 200 + JSON if OK                                        |
-| PUT    | /movies/admin     | If superuser, updates movie data              | 200 if OK, 401 if incorrect credentials                 |
-| POST   | /movies/admin     | If superuser, creates a new movie             | 201 if OK, 401 if incorrect credentials                 |
-| DELETE | /movies/admin     | If superuser, removes the selected movie      | 204 if OK, 401 if incorrect credentials                 |
+| GET    | /movies/                | Obtains entire list of movies                 | 200 + List of JSONs if OK                                 |
+| GET    | /movies/<int:pk>        | Obtains movie with id `pk`                    | 200 + JSON if OK                                        |
+| POST   | /movies/create          | If superuser, creates a new movie             | 201 if OK, 401 if incorrect credentials                 |
+| PUT    | /movies/update/<int:pk> | If superuser, updates movie data              | 200 if OK, 401 if incorrect credentials                 |
+| DELETE | /movies/delete/<int:pk> | If superuser, removes the selected movie      | 204 if OK, 401 if incorrect credentials                 |
+
 
 
 ### users
