@@ -9,6 +9,7 @@ class CreateMovieView(generics.CreateAPIView):
         if request.user.is_superuser:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
+                print(serializer.validated_data['title'])
                 movie, created = models.Movie.objects.get_or_create(title=serializer.validated_data['title'],
                                                                     cast=serializer.validated_data['cast'],
                                                                     country=serializer.validated_data['country'], 
@@ -19,9 +20,13 @@ class CreateMovieView(generics.CreateAPIView):
                                                                     duration=serializer.validated_data['duration'],
                                                                     year=serializer.validated_data['year'])
                 response = Response(status=status.HTTP_201_CREATED)
-            return response
+            else:
+                response = Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            response = Response(status=status.HTTP_401_UNAUTHORIZED)
+        return response
 
-class MovieListView(generics.ListCreateAPIView):
+class MovieListView(generics.ListAPIView):
     serializer_class = serializers.MovieListSerializer
     queryset = models.Movie.objects.all()
 
@@ -59,17 +64,45 @@ class MovieListView(generics.ListCreateAPIView):
             queryset = queryset.filter(genre__icontains=genre)
 
         return queryset
-    
-    def put(self):
-        if self.request.user.is_superuser:
-            response = Response(status=status.HTTP_201_CREATED)
-            return response
-        
-    def delete(self):
-        if self.request.user.is_superuser:
-            response = Response(status=status.HTTP_201_CREATED)
-            return response
 
 class MovieView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.MovieSerializer
     queryset = models.Movie.objects.all()
+
+    def put(self, request, pk):
+        if request.user.is_superuser:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                title = serializer.validated_data['title']
+                cast = serializer.validated_data['cast']
+                country = serializer.validated_data['country']
+                director = serializer.validated_data['director']
+                genre = serializer.validated_data['genre']
+                plot = serializer.validated_data['plot']
+                rate = serializer.validated_data['rate'] 
+                duration = serializer.validated_data['duration']
+                year = serializer.validated_data['year']
+                movie = models.Movie.objects.get(pk=pk)
+                movie.title =title
+                movie.cast=cast
+                movie.country=country 
+                movie.director=director 
+                movie.genre=genre 
+                movie.plot=plot 
+                movie.rate=float(rate)
+                movie.duration=duration
+                movie.year=int(year)
+                movie.save()
+                response = Response(status=status.HTTP_200_OK)
+                response.data = serializer.validated_data
+            else:
+                response = Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            response = Response(status=status.HTTP_401_UNAUTHORIZED)
+        return response
+        
+    def delete(self, request , pk):
+        if request.user.is_superuser:
+            movie = models.Movie.objects.filter(pk=pk).delete()
+            response = Response(status=status.HTTP_204_NO_CONTENT)
+            return response
