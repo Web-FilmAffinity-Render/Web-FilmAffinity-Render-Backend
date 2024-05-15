@@ -37,14 +37,14 @@ class LoginView(generics.CreateAPIView):
         
 
 class UserView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.UsuarioSerializer
+    serializer_class = serializers.UserSerializer
 
     def get_object(self):
         if not "session" in self.request.COOKIES:
             raise ObjectDoesNotExist
         else:
             user = Token.objects.get(key=self.request.COOKIES.get("session")).user
-            return models.Usuario.objects.get(username=user)
+            return models.User.objects.get(username=user)
 
     def handle_exception(self, exc):
         if isinstance(exc, ObjectDoesNotExist):

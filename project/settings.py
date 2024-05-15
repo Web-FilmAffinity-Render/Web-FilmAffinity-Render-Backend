@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -90,17 +92,17 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     # 'default': dj_database_url.config(
     #     # Replace this value with your local database's connection string.
-    #     default='postgres://admin:a6LIy1wKUsPTBgDas3D80HFzhtNI2xo0@dpg-cp1igp8l5elc73ettn70-a/default_u7ug',
+    #     default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a/default_m0bf',
     #     conn_max_age=600
     # ),
     'default': dj_database_url.config(
-        default='postgres://admin:a6LIy1wKUsPTBgDas3D80HFzhtNI2xo0@dpg-cp1igp8l5elc73ettn70-a.frankfurt-postgres.render.com/default_u7ug',
+        default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf',
         conn_max_age=600
     ),
-    'backup': {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    # 'default': {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
 }
 
 
@@ -121,6 +123,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Internationalization

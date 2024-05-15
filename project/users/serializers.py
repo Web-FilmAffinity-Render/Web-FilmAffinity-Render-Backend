@@ -1,15 +1,15 @@
 import re
 from rest_framework import serializers, exceptions
 from django.contrib.auth import authenticate
-from api.users import models
+from project.users import models
 
 PASSWORD_PATTERN = r"^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).*$"
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Usuario
-        fields = "__all__"
+        model = models.User
+        fields = ["name", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate_password(self, value):
@@ -19,8 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
             raise exceptions.ValidationError("Invalid password format")
 
     def create(self, validated_data):
-        return models.Usuario.objects.create_user(
-            username=validated_data["email"], **validated_data
+        username = validated_data.get("username", validated_data["email"])
+        return models.User.objects.create_user(
+            username=username, **validated_data
         )
 
     # def update(self, instance, validated_data):
