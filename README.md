@@ -95,9 +95,41 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 
 ### movies
 
+#### API
+
+
+| Method | Route              | Description                                   | Response                                               |
+|:--------|:----------------:|:---------------------------------------------:|--------------------------------------------------------:|
+| GET    | /movies/          | Obtains entire list of movies                 | 200 + List of JSONs if OK                               |
+| GET    | /movies/<int:pk>  | Obtains movie with id `pk`                    | 200 + JSON if OK                                        |
+| PUT    | /movies/admin     | If superuser, updates movie data              | 200 if OK, 401 if incorrect credentials                 |
+| POST   | /movies/admin     | If superuser, creates a new movie             | 201 if OK, 401 if incorrect credentials                 |
+| DELETE | /movies/admin     | If superuser, removes the selected movie      | 204 if OK, 401 if incorrect credentials                 |
+
+
 ### users
 
+#### API
+
+
+| Method  | Route         | Description                                                                   | Response         |
+|:--------|:-------------:|:-----------------------------------------------------------------------------:|-----------------:|
+| POST   | /users/signin  | Creates a new user with the incoming JSON: {"email": "\*", "password": "\*", ...}. Allows any fields, "email" and "password" are required. | 201 if OK, 400 if required fields are missing, 409 if there is already a user with that email |
+| POST   | /users/login   | Creates a session which allows access to other resources of the API in regard to the user indicated in the JSON: {"email": "\*", "password": "\*"} | 201 if OK, 401 if incorrect credentials                                                       |
+| GET    | /users/me      | Obtains the profile data from the logged user                                 | 200 + profile JSON if OK, 401 if not logged                                                   |
+| PUT    | /users/me      | Updates profile of the logged user with the provided data (JSON)              | 200 + updated profile JSON if OK, 401 if not logged                                           |
+| DELETE | /users/me      | Removes logged user                                                           | 204 if OK, 401 if not logged                                                                   |
+| DELETE | /users/logout  | Terminates user session                                                       | 204 if OK, 401 if not logged                                                                   |
+
+
 ### reviews
+
+#### API
+
+| Method  | Route                                 | Description                            | Response                                |
+|:--------|:-------------------------------------:|:---------------------------------------|----------------------------------------:|
+| GET     | /reviews/?movie_title=<movie title>   | Obtains list of reviews for the specified movie title               | 200 + List of review JSONs if OK, 400 if `movie_title` not provided, 404 if no reviews found for the specified movie title |
+| POST    | /reviews/                             | Creates a review for the logged user with the provided JSON         | 201 if OK, 401 if not logged, 404 if movie not found                      |
 
 ## Deployment
 
