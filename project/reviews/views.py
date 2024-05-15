@@ -7,16 +7,31 @@ from project.users.models import User
 from .serializers import ReviewSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ValidationError
 
 class ListReviewView(generics.ListAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-
         movie_title = self.request.query_params.get('movie_title')
-        queryset = Review.objects.filter(movie_title=movie_title)
+
+        if not movie_title:
+            raise ValidationError("The 'movie_title' query parameter is required.")
+
+        try:
+            movie = Movie.objects.get(title=movie_title)
+            queryset = Review.objects.filter(movie=movie)
+        except ObjectDoesNotExist:
+            queryset = Review.objects.none()
 
         return queryset
+
+    def handle_exception(self, exc):
+        
+        if isinstance(exc, ValidationError):
+            return Response({"error": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return super().handle_exception(exc)
 
 from api.users.models import User
 from rest_framework.permissions import IsAuthenticated
