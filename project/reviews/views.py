@@ -2,16 +2,17 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
 from project.movies.models import Movie
-from .models import Review
+from project.reviews.models import Review
 from project.users.models import User
-from .serializers import ReviewSerializer
+from project.reviews.serializers import ReviewSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 
 class ListReviewView(generics.ListAPIView):
     serializer_class = ReviewSerializer
-
+    
     def get_queryset(self):
         movie_title = self.request.query_params.get('movie_title')
 
@@ -20,7 +21,7 @@ class ListReviewView(generics.ListAPIView):
 
         try:
             movie = Movie.objects.get(title=movie_title)
-            queryset = Review.objects.filter(movie=movie)
+            queryset = Review.objects.filter(movie_title=movie)
         except ObjectDoesNotExist:
             queryset = Review.objects.none()
 
@@ -33,19 +34,14 @@ class ListReviewView(generics.ListAPIView):
         
         return super().handle_exception(exc)
 
-from api.users.models import User
-from rest_framework.permissions import IsAuthenticated
-
 class CreateReviewView(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
-
-    def create(self, request):
-        _ = self.get_logged_in_user(request)
-        movie_title = request.data.get('movie_title')
-        _ = self.get_movie(movie_title)
-        
-        return super().create(request)
+    
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            review, created = Review.objects.get_or_create(**serializer.validated_data)
+            return Response(status=status.HTTP_201_CREATED, data=review)
 
     def get_logged_in_user(self, request):
         if "session" in request.COOKIES:

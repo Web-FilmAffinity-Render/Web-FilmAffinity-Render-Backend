@@ -128,8 +128,8 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 
 | Method  | Route                                 | Description                            | Response                                |
 |:--------|:-------------------------------------:|:---------------------------------------|----------------------------------------:|
-| GET     | /reviews/?movie_title=<movie title>   | Obtains list of reviews for the specified movie title               | 200 + List of review JSONs if OK, 400 if `movie_title` not provided, 404 if no reviews found for the specified movie title |
-| POST    | /reviews/                             | Creates a review for the logged user with the provided JSON         | 201 if OK, 401 if not logged, 404 if movie not found                      |
+| GET     | /reviews/?movie_title=<movie title>   | Obtains list of reviews for the specified movie title               | 200 + List of review JSONs if OK, 400 if `movie_title` not provided |
+| POST    | /reviews/new                          | Creates a review for the logged user with the provided JSON         | 201 if OK, 401 if not logged, 404 if movie not found                      |
 
 ## Deployment
 

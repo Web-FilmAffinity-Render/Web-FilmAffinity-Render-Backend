@@ -10,15 +10,16 @@ class CreateMovieView(generics.CreateAPIView):
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
                 print(serializer.validated_data['title'])
-                movie, created = models.Movie.objects.get_or_create(title=serializer.validated_data['title'],
-                                                                    cast=serializer.validated_data['cast'],
-                                                                    country=serializer.validated_data['country'], 
-                                                                    director=serializer.validated_data['director'], 
-                                                                    genre=serializer.validated_data['genre'], 
-                                                                    plot=serializer.validated_data['plot'], 
-                                                                    rate=serializer.validated_data['rate'],
-                                                                    duration=serializer.validated_data['duration'],
-                                                                    year=serializer.validated_data['year'])
+                movie, created = models.Movie.objects.get_or_create(
+                    title=serializer.validated_data['title'],
+                    cast=serializer.validated_data['cast'],
+                    country=serializer.validated_data['country'], 
+                    director=serializer.validated_data['director'], 
+                    genre=serializer.validated_data['genre'], 
+                    plot=serializer.validated_data['plot'], 
+                    rate=serializer.validated_data['rate'],
+                    duration=serializer.validated_data['duration'],
+                    year=serializer.validated_data['year'])
                 response = Response(status=status.HTTP_201_CREATED)
             else:
                 response = Response(status=status.HTTP_400_BAD_REQUEST)
