@@ -22,10 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-r#q2^_0$@8l)vj#okh&#s!as_$fe#4_@l%ib3#!4-%61wo&m@2"
+# SECRET_KEY = "django-insecure-r#q2^_0$@8l)vj#okh&#s!as_$fe#4_@l%ib3#!4-%61wo&m@2"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -79,30 +80,26 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
-# Replace the SQLite DATABASES configuration with PostgreSQL:
+database_url = os.environ.get("DATABASE_URL")
 DATABASES = {
     # 'default': dj_database_url.config(
     #     # Replace this value with your local database's connection string.
     #     default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a/default_m0bf',
     #     conn_max_age=600
     # ),
+    # 'default': dj_database_url.config(
+    #     default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf',
+    #     conn_max_age=600
+    # ),
     'default': dj_database_url.config(
-        default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf',
+        default=database_url,
         conn_max_age=600
     ),
-    # 'default': {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
+    'backup': {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
 
