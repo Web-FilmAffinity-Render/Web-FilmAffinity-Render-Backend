@@ -6,3 +6,4 @@ class Review(models.Model):
     user_username = models.EmailField()
     review_text = models.TextField()
     review_rate = models.FloatField(max_length=4)
+    # date = models.DateTimeField()

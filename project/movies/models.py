@@ -6,7 +6,7 @@ class Movie(models.Model):
     country = models.CharField(max_length=100)
     director = models.CharField(max_length=100)
     cast = models.CharField(max_length=600)
-    rate = models.CharField(max_length=10)
+    rate = models.DecimalField(max_digits=5, decimal_places=3)
     genre = models.CharField(max_length=100)
     duration = models.BigIntegerField()
     # image = models.CharField(max_length=100)
