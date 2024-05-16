@@ -194,9 +194,11 @@ The `MovieListSerializer` is used to serialize and deserialize movie data for li
 
 ### Models
 
+#### User
+
 The model is a simple representation of a user with a name, an email and a password
 
-#### Fields
+##### Fields
 
 - **name**: The name of the user.
 - **email**: The email address of the user.
