@@ -284,3 +284,5 @@ The `CreateReviewView` ensures that only logged-in users can create reviews by r
 ## Deployment
 
 We will be deploying the server on Render.
+
+### .env

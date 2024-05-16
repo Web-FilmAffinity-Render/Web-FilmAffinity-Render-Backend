@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,13 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = "django-insecure-r#q2^_0$@8l)vj#okh&#s!as_$fe#4_@l%ib3#!4-%61wo&m@2"
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 
 # Application definition
@@ -81,19 +84,9 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 # Database
 
-database_url = os.environ.get("DATABASE_URL")
 DATABASES = {
-    # 'default': dj_database_url.config(
-    #     # Replace this value with your local database's connection string.
-    #     default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a/default_m0bf',
-    #     conn_max_age=600
-    # ),
-    # 'default': dj_database_url.config(
-    #     default='postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf',
-    #     conn_max_age=600
-    # ),
     'default': dj_database_url.config(
-        default=database_url,
+        default=os.getenv("DATABASE_URL"),
         conn_max_age=600
     ),
     'backup': {
@@ -142,10 +135,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
