@@ -1,0 +1,36 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.11.3]
+
+    venv:
+      SECRET_KEY=it-does-not-matter
+      DEBUG=False
+      ALLOWED_HOSTS=*
+      DATABASE_URL=postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
