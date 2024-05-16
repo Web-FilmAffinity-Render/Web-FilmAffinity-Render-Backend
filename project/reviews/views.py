@@ -8,7 +8,6 @@ from project.reviews.serializers import ReviewSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
 
 class ListReviewView(generics.ListAPIView):
     serializer_class = ReviewSerializer
@@ -37,28 +36,33 @@ class ListReviewView(generics.ListAPIView):
 class CreateReviewView(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            review, created = Review.objects.get_or_create(**serializer.validated_data)
-            return Response(status=status.HTTP_201_CREATED, data=review)
+    def create(self, request):
+        self.get_logged_user(request)
+        movie_title = request.data.get('movie_title')
+        self.get_movie(movie_title)
+        
+        return super().create(request)          
 
-    def get_logged_in_user(self, request):
+    def get_logged_user(self, request):
+        """
+        Checks the User is logged and the user_username exists
+        """
+        
         if "session" in request.COOKIES:
             user = Token.objects.get(key=request.COOKIES.get("session")).user
-            return User.objects.get(username=user)
+            if user:
+                try:
+                    User.objects.get(username=request.data.get('user_username'))
+                except User.DoesNotExist:
+                    raise User.DoesNotExist(f"No user {request.data.get('user_username')}")
         else:
             raise ObjectDoesNotExist("User not logged in.")
 
     def get_movie(self, movie_title):
         try:
-            return Movie.objects.get(title=movie_title)
+            Movie.objects.get(title=movie_title)
         except Movie.DoesNotExist:
             raise Movie.DoesNotExist("Movie does not exist.")
-
-    def perform_create(self, serializer):
-        # Set the logged-in user as the review's user
-        serializer.save(user_username=self.request.user)
 
     def handle_exception(self, exc):
         if isinstance(exc, ObjectDoesNotExist):
