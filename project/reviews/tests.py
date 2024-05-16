@@ -1,11 +1,13 @@
 from django.test import TestCase
 from project.users.models import User
+from rest_framework.authtoken.models import Token
+from project.movies.models import Movie
 
 class ReviewTests(TestCase):
     def test_createreview(self):
-        superuser = User.objects.create_superuser(username='admin@email.es', email='admin@email.com', password='easyPassword1')
-        _ = self.client.post('/users/login', {'email': 'admin@email.com','password': 'easyPassword1', 'username': 'admin@email.es'})
-        _ = self.client.post('/movies/create', {'title': 'New Movie', 'year': 2021, 'country': 'Spain', 'director':'Tarantino', 'cast':'aef', 'rate': 6.321, 'genre': 'Action', 'duration': 72, 'plot':'ew'})
+        superuser = User.objects.create_superuser(username='admin@email.com', email='admin@email.com', password='easyPassword1')
+        response = self.client.post('/users/login', {'email': 'admin@email.com','password': 'easyPassword1', 'username': 'admin@email.com'})
+        response = self.client.post('/movies/create', {'title': 'New Movie', 'year': 2021, 'country': 'Spain', 'director':'Tarantino', 'cast':'aef', 'rate': 6.321, 'genre': 'Action', 'duration': 72, 'plot':'ew'})
         response = self.client.post('/reviews/new',{'movie_title':'New Movie', 'user_username':'admin@email.com','review_text':'sff','review_rate':5.4})
         self.assertEqual(response.status_code, 201)
 
@@ -25,12 +27,13 @@ class ReviewTests(TestCase):
         response = self.client.get('/reviews/?movie_title=NewMovie')
         self.assertEqual(response.status_code, 200)
 
-    def test_get_revires_unlogged(self):
+    def test_get_reviews_unlogged(self):
         superuser = User.objects.create_superuser(username='admin@email.es', email='admin@email.com', password='easyPassword1')
         _ = self.client.post('/users/login', {'email': 'admin@email.com','password': 'easyPassword1', 'username': 'admin@email.es'})
         _ = self.client.post('/movies/create', {'title': 'NewMovie', 'year': 2021, 'country': 'Spain', 'director':'Tarantino', 'cast':'aef', 'rate': 6.321, 'genre': 'Action', 'duration': 72, 'plot':'ew'})
         _ = self.client.post('/reviews/new',{'movie_title':'NewMovie', 'user_username':'admin@email.com','review_text':'sff','review_rate':5.4})
-        _ = self.client.delete('/users/logout')
+        response = self.client.delete('/users/logout')
+
         response = self.client.get('/reviews/?movie_title=NewMovie')
         self.assertEqual(response.status_code, 200)
-    
+
