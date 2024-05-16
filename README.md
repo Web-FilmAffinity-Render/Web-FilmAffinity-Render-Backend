@@ -113,9 +113,11 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 
 ### Models
 
+#### Movie
+
 The model is a representation of a movie with all the relevant information
 
-### Fields
+##### Fields
 
 - **title**: The title of the movie.
 - **year**: The release year of the movie.
