@@ -88,11 +88,7 @@ DATABASES = {
 
 For any further doubts about the PostgresSQL database see [Render's official documentation](https://docs.render.com/databases)
 
-## Credentials
-
-## Middleware
-
-### WhiteNoise
+Take into account that, if you are deploying your database on Render, you will be provided with two kind of links, internal and external. Then, we suggest you use the internal *only* for deploying the backend on render, using it as your database url. For anything else, such as deploying the backend on local or running test using github, use the external link.
 
 # Apps
 
@@ -283,6 +279,23 @@ The `CreateReviewView` ensures that only logged-in users can create reviews by r
 
 ## Deployment
 
-We will be deploying the server on Render.
+The objective of this backend is to be deployed on Render. As we mentioned, this project is for academic means, so at the time we do it it will be deployed with the following URL:
+
+```shell
+https://web-filmaffinity-render-backend.onrender.com
+```
+
+As decribed in the [*Databases* section](#databases), uses a PostgreSQL database which also runs on Render.
 
 ### .env
+
+For the sake of adding an extra layer of security to our project and making it more realistic, even though its not needed since this serves as a mock backend, we wanted to keep some information as environment variables. 
+
+So, here we present the environment variables required for the backend to run. This could be placed on a .env file in the root directory, or explicitly defined on the environment as well. Sais variables are the following:
+
+```python
+SECRET_KEY: "some-secret-key"
+DEBUG: False
+ALLOWED_HOSTS: "*"
+DATABASE_URL: <postgresql database url>
+```
