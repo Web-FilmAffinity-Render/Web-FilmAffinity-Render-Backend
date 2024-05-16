@@ -15,7 +15,7 @@ jobs:
       matrix:
         python-version: [3.11.3]
 
-    venv:
+    env:
       SECRET_KEY=it-does-not-matter
       DEBUG=False
       ALLOWED_HOSTS=*
