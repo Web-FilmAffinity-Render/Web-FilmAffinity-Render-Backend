@@ -16,10 +16,10 @@ jobs:
         python-version: [3.11.3]
 
     env:
-      SECRET_KEY=it-does-not-matter
-      DEBUG=False
-      ALLOWED_HOSTS=*
-      DATABASE_URL=postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf
+      SECRET_KEY: it-does-not-matter
+      DEBUG: False
+      ALLOWED_HOSTS: *
+      DATABASE_URL: postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf
 
     steps:
     - uses: actions/checkout@v4
