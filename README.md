@@ -106,7 +106,67 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 | PUT    | /movies/update/<int:pk> | If superuser, updates movie data              | 200 if OK, 401 if incorrect credentials                 |
 | DELETE | /movies/delete/<int:pk> | If superuser, removes the selected movie      | 204 if OK, 401 if incorrect credentials                 |
 
+#### Models
 
+The model is a representation of a movie with all the relevant information
+
+##### Fields
+
+- **title**: The title of the movie.
+- **year**: The release year of the movie.
+- **country**: The country of origin for the movie.
+- **director**: The director(s) of the movie.
+- **cast**: The cast members of the movie.
+- **rate**: The average rating of the movie.
+- **genre**: The genre(s) of the movie.
+- **duration**: The duration of the movie in minutes.
+- **plot**: The plot summary of the movie.
+
+#### Serializers
+
+### MovieSerializer
+
+The `MovieSerializer` is used to serialize and deserialize movie data for detailed representations.
+
+#### Methods
+
+- `create`: Creates a new movie instance using the provided data. It calls the custom manager method `create_movie` to create the movie.
+
+- `update`: Updates an existing movie instance with the provided data.
+
+### MovieListSerializer
+
+The `MovieListSerializer` is used to serialize and deserialize movie data for list representations.
+
+#### Methods
+
+- `create`: Creates a new movie instance using the provided data.
+
+#### Views
+
+### MovieListView
+
+- **Purpose**: This view is responsible for listing movies based on query parameters such as title, plot, minimum and maximum rate, and genre.
+
+### MovieView
+
+- **Purpose**: This view is responsible for retrieving a specific movie by its primary key.
+
+### CreateMovieView
+
+- **Purpose**: This view is responsible for creating a new movie instance.
+
+### UpdateMovieView
+
+- **Purpose**: This view is responsible for updating an existing movie instance.
+
+### DestroyMovieView
+
+- **Purpose**: This view is responsible for deleting an existing movie instance.
+
+### Authentication
+
+- All views require authentication by checking the user's token retrieved from the session cookie. Except for `MovieListView` and `MoviewView` that doesnt require authentication.
 
 ### users
 
@@ -123,6 +183,56 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 | DELETE | /users/logout  | Terminates user session                                                       | 204 if OK, 401 if not logged                                                                   |
 
 
+#### Models
+
+The model is a simple representation of a user with a name, an email and a password
+
+##### Fields
+
+- **name**: The name of the user.
+- **email**: The email address of the user.
+- **password**: The hashed password of the user.
+
+#### Serializers
+
+## UserSerializer
+
+The `UserSerializer` is used to serialize and deserialize user data, particularly for creating and updating user accounts.
+
+### Validation
+
+The serializer includes a validation method `validate_password` that ensures the password meets a specific format using a regular expression pattern.
+
+---
+
+## LoginSerializer
+
+The `LoginSerializer` is used to validate login credentials and authenticate users.
+
+### Validation
+
+The serializer validates the login credentials by attempting to authenticate the user using Django's `authenticate` function.
+
+---
+
+#### Views
+
+### SigninView
+
+- **Purpose**: This view is responsible for creating a new user account.
+
+### LoginView
+
+- **Purpose**: This view is responsible for logging in a user and generating a session token.
+
+### UserView
+
+- **Purpose**: This view is responsible for retrieving, updating, or deleting the user's own account.
+
+### LogoutView
+
+- **Purpose**: This view is responsible for logging out a user by deleting the session token.
+
 ### reviews
 
 #### API
@@ -131,6 +241,46 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 |:--------|:-------------------------------------:|:---------------------------------------|----------------------------------------:|
 | GET     | /reviews/?movie_title=<movie title>   | Obtains list of reviews for the specified movie title               | 200 + List of review JSONs if OK, 400 if `movie_title` not provided |
 | POST    | /reviews/new                          | Creates a review for the logged user with the provided JSON         | 201 if OK, 401 if not logged, 404 if movie not found                      |
+
+#### Models
+
+The model consists in a representation of a review identifying the user and the movie it is reviewing
+
+##### Fields
+
+- **movie_title**: The title of the movie being reviewed.
+- **user_username**: The username or email of the user who wrote the review.
+- **review_text**: The text content of the review.
+- **review_rate**: The rating given to the movie in the review.
+
+#### Serializers
+
+### ReviewSerializer
+
+The `ReviewSerializer` is used to serialize and deserialize review data.
+
+#### Methods
+
+- `create`: Creates a new review instance using the provided data.
+
+#### Views
+
+### ListReviewView
+
+- **Purpose**: This view is responsible for listing reviews for a specific movie.
+- 
+### CreateReviewView
+
+- **Purpose**: This view is responsible for creating a new review for a movie.
+
+### Authentication
+
+- The `CreateReviewView` ensures that only logged-in users can create reviews by retrieving the user based on the session token.
+
+### Responses
+
+- Both views return appropriate HTTP responses based on the success or failure of the operations.
+
 
 ## Deployment
 
