@@ -301,3 +301,13 @@ DATABASE_URL: <postgresql database url>
 CSRF_TRUSTED_ORIGINS: <frontend url>
 CORS_ALLOW_ALL_ORIGINS: True
 ```
+
+Finally, the build and start commands for render are:
+
+```shell
+./build.sh
+```
+
+```shell
+python -m gunicorn project.asgi:application -k uvicorn.workers.UvicornWorker
+```
