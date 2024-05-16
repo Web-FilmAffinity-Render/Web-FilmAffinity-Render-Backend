@@ -287,6 +287,18 @@ https://web-filmaffinity-render-backend.onrender.com
 
 As decribed in the [*Databases* section](#databases), uses a PostgreSQL database which also runs on Render.
 
+The build and start commands are:
+
+**build command**
+```shell
+./build.sh
+```
+
+**start command**
+```shell
+python -m gunicorn project.asgi:application -k uvicorn.workers.UvicornWorker
+```
+
 ### .env
 
 For the sake of adding an extra layer of security to our project and making it more realistic, even though its not needed since this serves as a mock backend, we wanted to keep some information as environment variables. 
@@ -300,14 +312,4 @@ ALLOWED_HOSTS: "*"
 DATABASE_URL: <postgresql database url>
 CSRF_TRUSTED_ORIGINS: <frontend url>
 CORS_ALLOW_ALL_ORIGINS: True
-```
-
-Finally, the build and start commands for render are:
-
-```shell
-./build.sh
-```
-
-```shell
-python -m gunicorn project.asgi:application -k uvicorn.workers.UvicornWorker
 ```
