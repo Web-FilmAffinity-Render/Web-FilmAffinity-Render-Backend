@@ -16,11 +16,6 @@ class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Movie
         fields = '__all__'
-        
-    def validate_stock(self, value):
-        if value == 0:
-            raise serializers.ValidationError("Stock cannot be zero")
-        return value
-    
+
     def create(self, validated_data):
         return models.Movie.objects.create(**validated_data)
