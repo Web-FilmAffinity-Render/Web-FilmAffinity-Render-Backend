@@ -48,6 +48,7 @@ class MovieView(generics.RetrieveAPIView):
     serializer_class = serializers.MovieSerializer
     queryset = models.Movie.objects.all()
 
+
 class CreateMovieView(generics.CreateAPIView):
     serializer_class = serializers.MovieSerializer
     def post(self, request):
@@ -55,7 +56,6 @@ class CreateMovieView(generics.CreateAPIView):
         if user.is_superuser:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
-                print(serializer.validated_data['title'])
                 movie, created = models.Movie.objects.get_or_create(
                     title=serializer.validated_data['title'],
                     cast=serializer.validated_data['cast'],
@@ -67,12 +67,13 @@ class CreateMovieView(generics.CreateAPIView):
                     duration=serializer.validated_data['duration'],
                     year=serializer.validated_data['year'])
                 response = Response(status=status.HTTP_201_CREATED)
+                response.data = serializer.validated_data
             else:
                 response = Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             response = Response(status=status.HTTP_401_UNAUTHORIZED)
         return response
-
+    
 class UpdateMovieView(generics.UpdateAPIView):
     serializer_class = serializers.MovieSerializer
 

@@ -16,8 +16,8 @@ class MovieTests(TestCase):
         _ = self.client.post('/users/login', {'email': 'admin@email.com','password': 'easyPassword1', 'username': 'admin'})
 
         response = self.client.post('/movies/create', {'title': 'New Movie', 'year': 2021, 'country': 'Spain', 'direcor':'Tarantino', 'cast':'aef', 'rate': 6.321, 'genre': 'Action', 'duration': 72, 'plot':'ew'})
-        self.assertEqual(response.data.get('title'),'New Movie')
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('title'),'New Movie')
 
 class TestUpdateMovie(TestCase):
     def test_update_movie(self):
