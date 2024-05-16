@@ -298,4 +298,6 @@ SECRET_KEY: "some-secret-key"
 DEBUG: False
 ALLOWED_HOSTS: "*"
 DATABASE_URL: <postgresql database url>
+CSRF_TRUSTED_ORIGINS: <frontend url>
+CORS_ALLOW_ALL_ORIGINS: True
 ```
