@@ -1,8 +1,9 @@
-# Web-FilmAffinity-Render-Backend
+**Web-FilmAffinity-Render-Backend**
+==================================
 
 Backend server for our web project. As a Django-based server, it is divided into applications, a settings directory and the manage.py. The rest of the files are complementary.
 
-## Structure
+# Structure
 
 ```
 |-- Web-FilmAffinity-Render-Backend
@@ -20,8 +21,9 @@ Backend server for our web project. As a Django-based server, it is divided into
 |   |   |   |   |-- ...
 |   |   |   |-- __init__.py
 |   |   |   |-- admin.py
-|   |   |   |-- appps.py
+|   |   |   |-- apps.py
 |   |   |   |-- models.py
+|   |   |   |-- serializers.py
 |   |   |   |-- tests.py
 |   |   |   |-- views.py
 |   |   |-- reviews
@@ -29,8 +31,9 @@ Backend server for our web project. As a Django-based server, it is divided into
 |   |   |   |   |-- ...
 |   |   |   |-- __init__.py
 |   |   |   |-- admin.py
-|   |   |   |-- appps.py
+|   |   |   |-- apps.py
 |   |   |   |-- models.py
+|   |   |   |-- serializers.py
 |   |   |   |-- tests.py
 |   |   |   |-- views.py
 |   |   |-- users
@@ -38,8 +41,9 @@ Backend server for our web project. As a Django-based server, it is divided into
 |   |   |   |   |-- ...
 |   |   |   |-- __init__.py
 |   |   |   |-- admin.py
-|   |   |   |-- appps.py
+|   |   |   |-- apps.py
 |   |   |   |-- models.py
+|   |   |   |-- serializers.py
 |   |   |   |-- tests.py
 |   |   |   |-- views.py
 |   |   |-- __init__.py
@@ -54,11 +58,12 @@ Backend server for our web project. As a Django-based server, it is divided into
 |   |-- requirements.txt
 ```
 
-## Project
+# Project
+
 
 `/project` is the main folder for the project. Here we speciffy the settings, urls and interfaces for our server, managing its overall structure and behaviour. Inside it we can also find our applications. These could have been placed outside, since its only a matter of how is it deffined in the settings, but we found this more compact approach more suitable.
 
-### Databases
+## Databases
 
 For our default database, we will use a PostgresSQL database deployed from render. We have chosen this approach since is more suitable for a real-case scenario as well as more secure. Since this project was concieved as an academic task, we have deployed a PostgresSQL database in render that will serve our purpose, but will cease to exist eventually, and it won't be valid for this project anymore.
 
@@ -83,19 +88,19 @@ DATABASES = {
 
 For any further doubts about the PostgresSQL database see [Render's official documentation](https://docs.render.com/databases)
 
-### Credentials
+## Credentials
 
-### Middleware
+## Middleware
 
-#### WhiteNoise
+### WhiteNoise
 
-## Apps
+# Apps
 
 As metioned above, all the apps are located inside the `/project` folder. Following this schema, the apps are named, all with the same structure, as `project.<name of the app>`.
 
-### movies
+## movies
 
-#### API
+### API
 
 
 | Method | Route              | Description                                   | Response                                               |
@@ -106,11 +111,11 @@ As metioned above, all the apps are located inside the `/project` folder. Follow
 | PUT    | /movies/update/<int:pk> | If superuser, updates movie data              | 200 if OK, 401 if incorrect credentials                 |
 | DELETE | /movies/delete/<int:pk> | If superuser, removes the selected movie      | 204 if OK, 401 if incorrect credentials                 |
 
-#### Models
+### Models
 
 The model is a representation of a movie with all the relevant information
 
-##### Fields
+### Fields
 
 - **title**: The title of the movie.
 - **year**: The release year of the movie.
@@ -122,55 +127,57 @@ The model is a representation of a movie with all the relevant information
 - **duration**: The duration of the movie in minutes.
 - **plot**: The plot summary of the movie.
 
-#### Serializers
+### Serializers
 
-### MovieSerializer
+#### MovieSerializer
 
 The `MovieSerializer` is used to serialize and deserialize movie data for detailed representations.
 
-#### Methods
+##### Methods
 
 - `create`: Creates a new movie instance using the provided data. It calls the custom manager method `create_movie` to create the movie.
 
 - `update`: Updates an existing movie instance with the provided data.
 
-### MovieListSerializer
+#### MovieListSerializer
 
 The `MovieListSerializer` is used to serialize and deserialize movie data for list representations.
 
-#### Methods
+##### Methods
 
 - `create`: Creates a new movie instance using the provided data.
 
-#### Views
+### Views
 
-### MovieListView
+#### MovieListView
 
 - **Purpose**: This view is responsible for listing movies based on query parameters such as title, plot, minimum and maximum rate, and genre.
 
-### MovieView
+#### MovieView
 
 - **Purpose**: This view is responsible for retrieving a specific movie by its primary key.
 
-### CreateMovieView
+#### CreateMovieView
 
 - **Purpose**: This view is responsible for creating a new movie instance.
 
-### UpdateMovieView
+#### UpdateMovieView
 
 - **Purpose**: This view is responsible for updating an existing movie instance.
 
-### DestroyMovieView
+#### DestroyMovieView
 
 - **Purpose**: This view is responsible for deleting an existing movie instance.
 
-### Authentication
+<br>
+<br>
 
-- All views require authentication by checking the user's token retrieved from the session cookie. Except for `MovieListView` and `MoviewView` that doesnt require authentication.
+> **Authentication**: 
+> All views require authentication by checking the user's token retrieved from the session cookie. Except for `MovieListView` and `MoviewView` that doesnt require authentication.
 
-### users
+## users
 
-#### API
+### API
 
 
 | Method  | Route         | Description                                                                   | Response         |
@@ -183,66 +190,60 @@ The `MovieListSerializer` is used to serialize and deserialize movie data for li
 | DELETE | /users/logout  | Terminates user session                                                       | 204 if OK, 401 if not logged                                                                   |
 
 
-#### Models
+### Models
 
 The model is a simple representation of a user with a name, an email and a password
 
-##### Fields
+#### Fields
 
 - **name**: The name of the user.
 - **email**: The email address of the user.
 - **password**: The hashed password of the user.
 
-#### Serializers
+### Serializers
 
-## UserSerializer
+#### UserSerializer
 
 The `UserSerializer` is used to serialize and deserialize user data, particularly for creating and updating user accounts.
 
-### Validation
-
 The serializer includes a validation method `validate_password` that ensures the password meets a specific format using a regular expression pattern.
 
----
-
-## LoginSerializer
+#### LoginSerializer
 
 The `LoginSerializer` is used to validate login credentials and authenticate users.
 
-### Validation
-
 The serializer validates the login credentials by attempting to authenticate the user using Django's `authenticate` function.
 
----
+### Views
 
-#### Views
-
-### SigninView
+#### SigninView
 
 - **Purpose**: This view is responsible for creating a new user account.
 
-### LoginView
+#### LoginView
 
 - **Purpose**: This view is responsible for logging in a user and generating a session token.
 
-### UserView
+#### UserView
 
 - **Purpose**: This view is responsible for retrieving, updating, or deleting the user's own account.
 
-### LogoutView
+#### LogoutView
 
 - **Purpose**: This view is responsible for logging out a user by deleting the session token.
 
-### reviews
+## reviews
 
-#### API
+### API
 
 | Method  | Route                                 | Description                            | Response                                |
 |:--------|:-------------------------------------:|:---------------------------------------|----------------------------------------:|
 | GET     | /reviews/?movie_title=<movie title>   | Obtains list of reviews for the specified movie title               | 200 + List of review JSONs if OK, 400 if `movie_title` not provided |
 | POST    | /reviews/new                          | Creates a review for the logged user with the provided JSON         | 201 if OK, 401 if not logged, 404 if movie not found                      |
 
-#### Models
+### Models
+
+#### Review
 
 The model consists in a representation of a review identifying the user and the movie it is reviewing
 
@@ -253,33 +254,27 @@ The model consists in a representation of a review identifying the user and the 
 - **review_text**: The text content of the review.
 - **review_rate**: The rating given to the movie in the review.
 
-#### Serializers
+### Serializers
 
-### ReviewSerializer
+#### ReviewSerializer
 
 The `ReviewSerializer` is used to serialize and deserialize review data.
 
-#### Methods
+##### Methods
 
 - `create`: Creates a new review instance using the provided data.
 
-#### Views
+### Views
 
-### ListReviewView
+#### ListReviewView
 
 - **Purpose**: This view is responsible for listing reviews for a specific movie.
-- 
-### CreateReviewView
+
+#### CreateReviewView
 
 - **Purpose**: This view is responsible for creating a new review for a movie.
 
-### Authentication
-
-- The `CreateReviewView` ensures that only logged-in users can create reviews by retrieving the user based on the session token.
-
-### Responses
-
-- Both views return appropriate HTTP responses based on the success or failure of the operations.
+The `CreateReviewView` ensures that only logged-in users can create reviews by retrieving the user based on the session token.
 
 
 ## Deployment
