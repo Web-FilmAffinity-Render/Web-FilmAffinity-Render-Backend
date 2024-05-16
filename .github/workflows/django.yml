@@ -1,4 +1,4 @@
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
@@ -13,10 +13,16 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.10.13]
+        python-version: [3.11.3]
+
+    venv:
+      SECRET_KEY=it-does-not-matter
+      DEBUG=False
+      ALLOWED_HOSTS=*
+      DATABASE_URL=postgres://admin:hCXZQZ4Pmv15DrfWQkEixGXSQ9jrdN69@dpg-cp2f2hg21fec73cq8bg0-a.frankfurt-postgres.render.com/default_m0bf
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
