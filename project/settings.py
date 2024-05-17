@@ -33,6 +33,9 @@ DEBUG = os.getenv("DEBUG", False)
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
+CORS_ALLOW_ALL_ORIGINS  = os.getenv("CORS_ALLOW_ALL_ORIGINS", True)
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://web-filmaffinity-render-frontend-d41b.onrender.com")
+
 
 # Application definition
 
